@@ -5,15 +5,13 @@ from model import get_resnet18_custom_model
 
 def predict_single_image(image_path, model_weight_path="model_best.pth", class_names=None):
     if class_names is None:
-        class_names = ['Lớp 1', 'Lớp 2', 'Lớp 3'] # Thay đổi tên nhãn tương ứng với dữ liệu của bạn
+        class_names = ['Lớp 1', 'Lớp 2', 'Lớp 3'] 
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    # 1. Khởi tạo kiến trúc mô hình
     num_classes = len(class_names)
     model = get_resnet18_custom_model(num_classes=num_classes)
     
-    # Tải trọng số đã huấn luyện
     try:
         model.load_state_dict(torch.load(model_weight_path, map_location=device))
     except FileNotFoundError:
@@ -23,7 +21,6 @@ def predict_single_image(image_path, model_weight_path="model_best.pth", class_n
     model = model.to(device)
     model.eval()
 
-    # 2. Xử lý ảnh đầu vào
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
@@ -38,7 +35,6 @@ def predict_single_image(image_path, model_weight_path="model_best.pth", class_n
 
     input_tensor = transform(image).unsqueeze(0).to(device)
 
-    # 3. Dự đoán
     with torch.no_grad():
         outputs = model(input_tensor)
         probabilities = torch.nn.functional.softmax(outputs, dim=1)
@@ -52,6 +48,4 @@ def predict_single_image(image_path, model_weight_path="model_best.pth", class_n
     print("========================================")
 
 if __name__ == "__main__":
-    # Ví dụ gọi hàm dự đoán một ảnh test
-    # predict_single_image("test_image.jpg", class_names=['Normal', 'Defect_1', 'Defect_2'])
     print("Hãy điền đường dẫn ảnh cụ thể vào hàm predict_single_image để chạy thử.")
