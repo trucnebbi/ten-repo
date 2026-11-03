@@ -7,19 +7,16 @@ from model import get_resnet18_custom_model
 import os
 
 def train_model():
-    # 1. Cấu hình thiết bị (GPU nếu có, không thì CPU)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"-> Đang sử dụng thiết bị: {device}")
 
-    # 2. Xử lý và tăng cường dữ liệu đầu vào (Transforms)
     train_transforms = transforms.Compose([
-        transforms.Resize((224, 224)),       # Chuẩn kích thước đầu vào của ResNet-18
-        transforms.RandomHorizontalFlip(),   # Tăng cường dữ liệu chống quá khớp
+        transforms.Resize((224, 224)),      
+        transforms.RandomHorizontalFlip(),  
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
-    # 3. Nạp dữ liệu từ thư mục (Yêu cầu cấu trúc: dataset/train/class_a, dataset/train/class_b...)
     train_dir = './dataset/train'
     if not os.path.exists(train_dir):
         print(f"Lỗi: Không tìm thấy thư mục dữ liệu tại {train_dir}!")
@@ -36,12 +33,10 @@ def train_model():
     model = get_resnet18_custom_model(num_classes=num_classes)
     model = model.to(device)
 
-    # 5. Hàm Loss và Optimizer (chỉ optimize các trọng số ở Custom Classifier)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.fc.parameters(), lr=0.001)
 
-    # 6. Vòng lặp huấn luyện (Training Loop)
-    num_epochs = 5  # Có thể tăng số epoch lên tùy theo dữ liệu thực tế
+    num_epochs = 5  
     print("=== BẮT ĐẦU QUÁ TRÌNH HUẤN LUYỆN ===")
 
     for epoch in range(num_epochs):
@@ -68,7 +63,6 @@ def train_model():
         epoch_acc = correct / total
         print(f"Epoch [{epoch+1}/{num_epochs}] | Loss: {epoch_loss:.4f} | Accuracy: {epoch_acc*100:.2f}%")
 
-    # Lưu mô hình sau khi train
     torch.save(model.state_dict(), "model_best.pth")
     print("=== HUẤN LUYỆN HOÀN TẤT! Đã lưu trọng số vào 'model_best.pth' ===")
 
