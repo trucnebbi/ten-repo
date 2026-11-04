@@ -47,5 +47,15 @@ def predict_single_image(image_path, model_weight_path="model_best.pth", class_n
     print(f" Độ tin cậy (Confidence): {confidence.item()*100:.2f}%")
     print("========================================")
 
+import sys
 if __name__ == "__main__":
-    print("Hãy điền đường dẫn ảnh cụ thể vào hàm predict_single_image để chạy thử.")
+    if len(sys.argv) > 1:
+        img_path = sys.argv[1]
+    else:
+        img_path = "wifi_error_sample.jpg"  
+
+    predict_single_image(
+        image_path=img_path, 
+        model_weight_path="model_best.pth", 
+        class_names=['wifi bth', 'wifi loi']
+    )
