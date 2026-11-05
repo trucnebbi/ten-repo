@@ -48,14 +48,23 @@ def predict_single_image(image_path, model_weight_path="model_best.pth", class_n
     print("========================================")
 
 import sys
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        img_path = sys.argv[1]
-    else:
-        img_path = "wifi_error_sample.jpg"  
 
+if __name__ == "__main__":
+    img_path = sys.argv[1] if len(sys.argv) > 1 else "wifi_signal_image.jpg"
+    
+    class_names = [
+        'wifi_normal',
+        'wifi_packet_loss',
+        'wifi_bluetooth_interference',
+        'wifi_microwave_interference',
+        'wifi_co_channel_interference',
+        'wifi_congestion',
+        'wifi_path_loss_fading',
+        'wifi_multipath_distortion'
+    ]
+    
     predict_single_image(
         image_path=img_path, 
         model_weight_path="model_best.pth", 
-        class_names=['wifi bth', 'wifi loi']
+        class_names=class_names
     )
