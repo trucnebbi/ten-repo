@@ -2,6 +2,7 @@ import torch
 from torchvision import transforms
 from PIL import Image
 from model import get_resnet18_custom_model
+import sys
 
 def predict_single_image(image_path, model_weight_path="model_best.pth", class_names=None):
     if class_names is None:
@@ -47,13 +48,23 @@ def predict_single_image(image_path, model_weight_path="model_best.pth", class_n
     print(f" Độ tin cậy (Confidence): {confidence.item()*100:.2f}%")
     print("========================================")
 
-import sys
-
 if __name__ == "__main__":
-    img_path = sys.argv[1] if len(sys.argv) > 1 else "wifi_error_sample.jpg"
+    img_path = sys.argv[1] if len(sys.argv) > 1 else "C:/Users/Admin/PRJ/wifi_error_sample.jpg"
+    
+    # Khai báo đầy đủ 8 lớp để khớp với file model_best.pth (8 lớp)
+    class_names = [
+        'wifi_normal',
+        'wifi_packet_loss',
+        'wifi_bluetooth_interference',
+        'wifi_microwave_interference',
+        'wifi_co_channel_interference',
+        'wifi_congestion',
+        'wifi_path_loss_fading',
+        'wifi_multipath_distortion'
+    ]
     
     predict_single_image(
         image_path=img_path, 
         model_weight_path="model_best.pth", 
-        class_names=['wifi bth', 'wifi loi']
+        class_names=class_names
     )
