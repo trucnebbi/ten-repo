@@ -7,16 +7,19 @@ from model import get_resnet18_custom_model
 import os
 
 def train_model():
+    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"-> Đang sử dụng thiết bị: {device}")
 
+    
     train_transforms = transforms.Compose([
-        transforms.Resize((224, 224)),      
-        transforms.RandomHorizontalFlip(),  
+        transforms.Resize((224, 224)),       
+        transforms.RandomHorizontalFlip(),   #
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
+    
     train_dir = './dataset/train'
     if not os.path.exists(train_dir):
         print(f"Lỗi: Không tìm thấy thư mục dữ liệu tại {train_dir}!")
@@ -29,13 +32,15 @@ def train_model():
     num_classes = len(train_dataset.classes)
     print(f"-> Số lớp phân loại: {num_classes} ({train_dataset.classes})")
 
-    # 4. Khởi tạo mô hình
+    
     model = get_resnet18_custom_model(num_classes=num_classes)
     model = model.to(device)
 
+    
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.fc.parameters(), lr=0.001)
 
+   
     num_epochs = 5  
     print("=== BẮT ĐẦU QUÁ TRÌNH HUẤN LUYỆN ===")
 
@@ -63,6 +68,7 @@ def train_model():
         epoch_acc = correct / total
         print(f"Epoch [{epoch+1}/{num_epochs}] | Loss: {epoch_loss:.4f} | Accuracy: {epoch_acc*100:.2f}%")
 
+   
     torch.save(model.state_dict(), "model_best.pth")
     print("=== HUẤN LUYỆN HOÀN TẤT! Đã lưu trọng số vào 'model_best.pth' ===")
 
