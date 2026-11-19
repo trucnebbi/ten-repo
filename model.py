@@ -8,7 +8,6 @@ def get_resnet18_custom_model(num_classes):
     - ResNet-18 Pretrained làm Feature Extractor (đóng băng các lớp ẩn)
     - Custom Classifier tự xây dựng ở lớp cuối
     """
-    
     weights = models.ResNet18_Weights.DEFAULT
     model = models.resnet18(weights=weights)
     
@@ -20,7 +19,7 @@ def get_resnet18_custom_model(num_classes):
     model.fc = nn.Sequential(
         nn.Linear(num_ftrs, 256),
         nn.ReLU(),
-        nn.Dropout(0.4),                   
+        nn.Dropout(0.4),                    
         nn.Linear(256, num_classes)         
     )
     
